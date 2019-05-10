@@ -66,7 +66,7 @@ namespace Entrada
             do
             {
                 bitsMaximos = (int)Math.Pow(2, exponente);
-                exponente++;
+                exponente-=2;
             } while (bitsMaximos < numeroDeMuestras);
 
             numeroDeMuestrasComplejas = bitsMaximos / 2;
@@ -97,6 +97,17 @@ namespace Entrada
             {
                 FastFourierTransform.FFT(true, exponente, señalCompleja);
 
+                float[] valoresAbsolutos = new float[señalCompleja.Length];
+                for(int i=0; i < señalCompleja.Length; i++)
+                {
+                    valoresAbsolutos[i] = (float)Math.Sqrt((señalCompleja[i].X * señalCompleja[i].X) + (señalCompleja[i].Y * señalCompleja[i].Y));
+                }
+
+                int indiceSeñalConMasPresencia = valoresAbsolutos.ToList().IndexOf(valoresAbsolutos.Max());
+
+                float frecuenciaFundamental = (float)indiceSeñalConMasPresencia * waveIn.WaveFormat.SampleRate / (float)valoresAbsolutos.Length;
+
+                lblFrecuencia.Text = frecuenciaFundamental.ToString("f");
             }
         }
 
